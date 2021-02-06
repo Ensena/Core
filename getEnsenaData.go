@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/Ensena/graphql-Client"
+	bot "github.com/Ensena/bot-telegram"
+	"github.com/Ensena/graphql-client"
 )
 
 type userEnsena struct {
@@ -25,7 +26,7 @@ type UserMe struct {
 	} `json:"data"`
 }
 
-func GetDB(userID int) ([]byte, userEnsena) {
+func GetEnsenaData(userID int) ([]byte, userEnsena) {
 
 	graphMe := fmt.Sprintf(`{
 		allApps {
@@ -310,15 +311,13 @@ func GetDB(userID int) ([]byte, userEnsena) {
 	  
 	  `, userID, userID, userID)
 	response, err := graphql.Query(graphMe)
-
 	us := UserMe{}
-	if err != nil {
+	if err == nil {
 		err = json.Unmarshal(response, &us)
-		if err != nil {
-
-			// 	msg := tgbotapi.NewMessage(-419794848, fmt.Sprintf(`%s %s ha cargado Dashboard
-			// Correo  :  %s`, us.Data.User.Name, us.Data.User.LastName, us.Data.User.Email))
-			// 	bot.Send(msg)
+		if err == nil {
+			msg := fmt.Sprintf(`%s %s ha cargado Información Base
+			Correo  :  %s`, us.Data.User.Name, us.Data.User.LastName, us.Data.User.Email)
+			bot.Send(bot.SendID, msg)
 		}
 	}
 	return response, us.Data.User
