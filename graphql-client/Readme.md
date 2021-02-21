@@ -1,0 +1,1 @@
+This Library is for other proyects connect Graphql Query to server

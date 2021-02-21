@@ -5,7 +5,8 @@ import (
 	"fmt"
 
 	bot "github.com/Ensena/bot-telegram"
-	"github.com/Ensena/graphql-client"
+	"github.com/Ensena/core/graphql-client"
+	"github.com/gin-gonic/gin"
 )
 
 type userEnsena struct {
@@ -15,7 +16,7 @@ type userEnsena struct {
 	Email     string `json:"email"`
 	Picture   string `json:"picture"`
 	Public    bool   `json:"public"`
-	MoodleUDP bool   `json:"moodle_udp"`
+	MoodleUDP bool   `json:"moodleUdp"`
 	Cover     string `json:"cover"`
 	AboutMe   string `json:"aboutMe"`
 }
@@ -26,7 +27,7 @@ type UserMe struct {
 	} `json:"data"`
 }
 
-func GetEnsenaData(userID int) ([]byte, userEnsena) {
+func GetEnsenaData(ctx *gin.Context, userID int) ([]byte, userEnsena) {
 
 	graphMe := fmt.Sprintf(`{
 		allApps {
@@ -52,6 +53,7 @@ func GetEnsenaData(userID int) ([]byte, userEnsena) {
 		  lastName
 		  email
 		  picture
+		  moodleUdp
 		  public
 		  cover
 		  aboutMe
@@ -310,14 +312,14 @@ func GetEnsenaData(userID int) ([]byte, userEnsena) {
 	  }
 	  
 	  `, userID, userID, userID)
-	response, err := graphql.Query(graphMe)
+	response, err := graphql.Query(ctx, graphMe)
 	us := UserMe{}
 	if err == nil {
 		err = json.Unmarshal(response, &us)
 		if err == nil {
 			msg := fmt.Sprintf(`%s %s ha cargado Información Base
 			Correo  :  %s`, us.Data.User.Name, us.Data.User.LastName, us.Data.User.Email)
-			bot.Send(bot.SendID, msg)
+			go bot.Send(bot.SendID, msg)
 		}
 	}
 	return response, us.Data.User

@@ -1,9 +1,22 @@
 package core
 
-func GetInfo(userID int) []byte {
-	response, user := GetEnsenaData(userID)
+import (
+	"github.com/gin-gonic/gin"
+	"go.elastic.co/apm"
+)
+
+func GetInfo(ctx *gin.Context, userID int) []byte {
+
+	span, _ := apm.StartSpan(ctx.Request.Context(), "Get Data From Ensena", "GetData")
+	response, user := GetEnsenaData(ctx, userID)
+	span.End()
+
 	if user.MoodleUDP {
-		GetMoodle(user.Email)
+		span, _ := apm.StartSpan(ctx.Request.Context(), "Get Data From Moodle", "GetData")
+		moodleData := GetMoodle(ctx, user.Email)
+		span.End()
+
+		response = Mixer(&response, &moodleData, "moodle")
 	}
 	return response
 }
