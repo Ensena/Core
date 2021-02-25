@@ -123,6 +123,7 @@ func GetEnsenaData(ctx *gin.Context, userID int) ([]byte, userEnsena) {
 						name
 						lastName
 						email
+						picture
 					  }
 					}
 				  }
@@ -177,6 +178,7 @@ func GetEnsenaData(ctx *gin.Context, userID int) ([]byte, userEnsena) {
 				  semester
 				  year
 				  enable
+
 				  section
 				  custom
 				  tasksBySectionId(condition: { enable: true }) {

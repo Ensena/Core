@@ -11,5 +11,6 @@ func main() {
 	ws := gin.Default()
 	ws.Use(apmgin.Middleware(ws))
 	ws.GET("/me", router.GetInfo)
+	ws.GET("/news", router.GetNews)
 	ws.Run(":8000")
 }
