@@ -57,6 +57,7 @@ func GetEnsenaData(ctx *gin.Context, userID int) ([]byte, userEnsena) {
 		  public
 		  cover
 		  aboutMe
+		  role
 		  UDP: authsByUserId(condition: { system: 1 }) {
 			edges {
 			  node {

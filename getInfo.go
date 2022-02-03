@@ -17,6 +17,9 @@ func GetInfo(ctx *gin.Context, userID int) []byte {
 		span.End()
 
 		response = Mixer(&response, &moodleData, "moodle")
+	} else {
+		empty := ([]byte("[]"))
+		response = Mixer(&response, &empty, "moodle")
 	}
 	return response
 }

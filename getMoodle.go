@@ -1,6 +1,7 @@
 package core
 
 import (
+	"crypto/tls"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -11,11 +12,13 @@ import (
 
 func GetMoodle(ctx *gin.Context, email string) []byte {
 
-	url := "http://200.14.84.16/api/v1/moodle/getCourse"
+	url := "https://200.14.84.16/api/v1/moodle/getCourses"
 	method := "GET"
-
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
 	//	client := &http.Client{}
-	client := apmhttp.WrapClient(http.DefaultClient)
+	client := apmhttp.WrapClient(&http.Client{Transport: tr})
 
 	req, err := http.NewRequest(method, url, nil)
 
